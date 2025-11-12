@@ -1,4 +1,4 @@
-#import "/lib/book-toc.typ": contents, book-title, lookup-and-format
+#import "/lib/book-toc.typ": contents, book, lookup-and-format
 
 #let study-entire(section, except: none) = {
   // [Lees van deze paragraaf alle subparagrafen]
@@ -20,7 +20,7 @@
 }
 
 #let study-intro(section) = [
-  Bestudeer in #book-title de introductie van #lookup-and-format(section).
+  Bestudeer in #book.authors de introductie van #lookup-and-format(section).
 ]
 #let study-summary(section) = [
   Bestudeer de samenvatting in paragraaf #section.
