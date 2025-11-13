@@ -103,8 +103,8 @@
   </ul>
 </div>
 */
-#let objectives(it) = ou-component("learningobjectives")[ //, title: "Leerdoelen")[
-  Na het bestuderen van deze leereenheid wordt verwacht dat u:
+#let objectives(element: "leereenheid", it) = ou-component("learningobjectives")[ //, title: "Leerdoelen")[
+  Na het bestuderen van deze #element wordt verwacht dat u:
   #it
 ]
 
