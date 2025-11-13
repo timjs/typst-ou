@@ -1,4 +1,4 @@
-#import "/lib/basic/helpers.typ": *
+#import "/lib/basic/helpers.typ"
 
 /// We need some way to print contents of a `div` when we're *not* exporting to Html,
 /// that's what `div-or-id` is for.
@@ -32,7 +32,7 @@
 //     it.body
 //   })
 // )
-#let ou-block(kind, supplement: none, caption: none, wrapper: identity, it) = ou-component(
+#let ou-block(kind, supplement: none, caption: none, wrapper: helpers.identity, it) = ou-component(
   kind,
   wrapper[
     #if supplement != none [=== #supplement #if caption != none [(#caption)]]
@@ -209,6 +209,9 @@
   supplement: "Voorbeeld",
 )
 
+#let emphasize = ou-block-gray-accent.with(
+  supplement: "Belangrijk",
+)
 
 //// Old components ////////////////////////////////////////////////////////////////////////////////
 
