@@ -1,25 +1,54 @@
 #import "/lib/basic/helpers.typ"
 
-/// We need some way to print contents of a `div` when we're *not* exporting to Html,
-/// that's what `div-or-id` is for.
-#let div-or-id(class: none, it) = context {
-  (if target() == "html" {html.div.with(class: class)} else {identity})(it)
+/// Helper to annotate contents with an Html class (when exporting to Html)
+/// or just use the contents (when exporting to Pdf).
+#let div-or-id(class: none, title: "", it) = context {
+  if target() == "html" {html.div(class: class, title: title, it)} else {it}
 }
-#let button-or-none(class: none) = context {
-  if target() == "html" {html.button(class: class)}
-}
-/// We need to make sure to add a `parbreak` to force Typst to make a (single) paragraph.
-#let div-or-id-with-par(class: none, it) = div-or-id(class: class)[
+/// Helper to force Typst to make a (single) paragraph.
+/// Some OU components need this to work properly.
+///
+/// Note:
+///     We could add an `html.p`, but then we'll have Typst paragraphs
+///     wrapped in that `html.p`, which is not proper Html.
+#let div-or-id-with-par(..args, it) = div-or-id(..args)[
   #it
   #parbreak()
 ]
 
-// #let ou-component(kind, title: none, it) = div-or-id-with-par(class: "bs-ou-component-" + kind)[
-#let ou-component(kind, it) = div-or-id-with-par(class: "bs-ou-component-" + kind, it)
+/// Helper to produce an Html unordered list item (when exporting to Html)
+/// or just use the contents (when exporting to Pdf).
+/// Some OU components need this to work properly.
+#let ul-li-or-id(it) = context {
+  if target() == "html" {html.ul(html.li(it))} else {it}
+}
+
+/// Helper to produce an Html button (when exporting to Html)
+/// or just nothing (when exporting to Pdf).
+#let button-or-none(class: none) = context {
+  if target() == "html" {html.button(class: class)}
+}
+
+/// Any OU component of `kind` with optional `icon`.
+#let ou-component(kind, icon: "", it) = div-or-id-with-par(
+  class: "bs-ou-component-" + kind,
+  title: icon,
+  it,
+)
+
 /// A block of `kind` styled by the OU
 ///
 /// / `kind`: can be anything the OU provides as `bs-ou-component-X`
-/// / `wrapper`: a wrapper function to put the body in
+/// / `inner`: a wrapper function to put the body in
+#let ou-block(kind, supplement: none, caption: none, inner: helpers.identity, ..args, it) = ou-component(
+  kind,
+  ..args,
+  inner[
+    #if supplement != none [=== #supplement #if caption != none [(#caption)]]
+    #it
+  ]
+)
+/// Possible implementation when using figures
 /// / `it`: should be a `figure` element
 // #let ou-block(kind, supplement, caption, wrapper: identity, it) = ou-component(
 //   kind,
@@ -32,18 +61,21 @@
 //     it.body
 //   })
 // )
-#let ou-block(kind, supplement: none, caption: none, wrapper: helpers.identity, it) = ou-component(
-  kind,
-  wrapper[
-    #if supplement != none [=== #supplement #if caption != none [(#caption)]]
-    #it
-  ]
-)
 
-#let ou-block-white = ou-block.with("")
-#let ou-block-white-accent = ou-block.with("example", wrapper: div-or-id-with-par.with(class: "example-wrapper"))
+
+//// Basic components ////////////////////////////////////////////////////////////////////////////////
+
+#let ou-block-white = ou-block.with("") //TODO: icon here?
+#let ou-block-white-accent = ou-block.with("example", inner: div-or-id-with-par.with(class: "example-wrapper"))
+// #let ou-block-white-pointing = ou-block.with("studyinstructions", inner: ul-li-or-id)
 #let ou-block-gray = ou-block.with("case")
 #let ou-block-gray-accent = ou-block.with("accent")
+
+
+//// Custom components ///////////////////////////////////////////////////////////////////////////////
+
+#let custom-block = ou-block.with("custom")
+#let custom-block-gray = ou-block.with("custom-gray")
 
 
 //// Study components //////////////////////////////////////////////////////////////////////////////
@@ -103,18 +135,13 @@
   </ul>
 </div>
 */
-#let objectives(element: "leereenheid", it) = ou-component("learningobjectives")[ //, title: "Leerdoelen")[
+#let goals(element: "leereenheid", it) = ou-component("learningobjectives")[ //, title: "Leerdoelen")[
   Na het bestuderen van deze #element wordt verwacht dat u:
   #it
 ]
 
-/*
-<div class="bs-ou-component-instruction">
-  <h2>Instructie</h2>
-  <p>[[Voeg hier de instructie in]]</p>
-</div>
-*/
-#let directions(chapter, authors, it) = ou-component("instruction")[ //, title: "Aanwijzingen")[
+#let materials = custom-block.with(icon: "")
+#let chapter(chapter, authors, it) = materials[ //("instruction")[ //, title: "Aanwijzingen")[
   Bij deze leereenheid hoort hoofdstuk~#chapter van het tekstboek van #authors.
   #it
 ]
@@ -209,9 +236,10 @@
   supplement: "Voorbeeld",
 )
 
-#let emphasize = ou-block-gray-accent.with(
+#let accent = ou-block-gray-accent.with(
   supplement: "Belangrijk",
 )
+
 
 //// Old components ////////////////////////////////////////////////////////////////////////////////
 
