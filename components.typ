@@ -40,11 +40,11 @@
 ///
 /// / `kind`: can be anything the OU provides as `bs-ou-component-X`
 /// / `inner`: a wrapper function to put the body in
-#let ou-block(kind, supplement: none, caption: none, inner: helpers.identity, ..args, it) = ou-component(
+#let ou-block(kind, supplement: none, caption: none, numbering: none, inner: helpers.identity, ..args, it) = ou-component(
   kind,
   ..args,
   inner[
-    #if supplement != none [=== #supplement #if caption != none [(#caption)]]
+    #if supplement != none [#heading(level: 3, numbering: numbering)[#supplement] #if caption != none [(#caption)]]
     #it
   ]
 )
@@ -207,6 +207,7 @@
 #let exercise(caption: none, old: none, body, solution) = ou-block-gray(
   supplement: "Opdracht",
   caption: caption,// + if old != none [was #old],
+  numbering: "1.1.1",
   {
     body
     answer(solution)
@@ -221,6 +222,7 @@
 */
 #let definition = ou-block-gray-accent.with(
   supplement: "Definitie",
+  numbering: "1.1.1",
 )
 
 /*
@@ -234,6 +236,7 @@
 */
 #let example = ou-block-white-accent.with(
   supplement: "Voorbeeld",
+  numbering: "1.1.1",
 )
 
 #let accent = ou-block-gray-accent.with(
