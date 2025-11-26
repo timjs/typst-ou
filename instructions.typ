@@ -1,4 +1,6 @@
-#import "/lib/book-toc.typ": contents, book, lookup-and-format
+//TODO: factor out `lookup-and-format`
+#import "/lib/book-toc.typ": lookup-and-format
+#import "/lib/ou/components.typ"
 
 #let study-entire(section, except: none) = {
   // [Lees van deze paragraaf alle subparagrafen]
@@ -19,7 +21,7 @@
   [.]
 }
 
-#let study-intro(section) = [
+#let study-intro(book, section) = [
   Bestudeer in #book.authors de introductie van #lookup-and-format(section).
 ]
 #let study-summary(section) = [
@@ -41,4 +43,11 @@
 ]
 #let skip-rest-or-extra() = [
   De rest van deze paragraaf is geen tentamenstof, maar kunt u lezen ter verdieping.
+]
+
+#let under-construction() = components.accent()[
+  Deze cursussite is nog in ontwikkeling!
+  Bij leereenheden die nog niet compleet zijn zul je deze waarschuwing terugvinden.
+  Verwijzingen naar het tekstboek voegen wij de komende tijd stapsgewijs toe.
+  Ook zullen wij de lesstof uitbreiden met meer opdrachten.
 ]
