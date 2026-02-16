@@ -2,8 +2,8 @@
 
 /// Helper to annotate contents with an Html class (when exporting to Html)
 /// or just use the contents (when exporting to Pdf).
-#let div-or-id(class: none, title: "", it) = context {
-  if target() == "html" {html.div(class: class, title: title, it)} else {it}
+#let div-or-id(class: "", title: "", style: "", it) = context {
+  if target() == "html" {html.div(class: class, title: title, style: style, it)} else {it}
 }
 /// Helper to force Typst to make a (single) paragraph.
 /// Some OU components need this to work properly.
@@ -44,7 +44,7 @@
   kind,
   ..args,
   inner[
-    #if supplement != none [#heading(level: 3, numbering: numbering)[#supplement] #if caption != none [(#caption)]]
+    #if supplement != none [#heading(depth: 3, numbering: numbering)[#supplement] #if caption != none [(#caption)]]
     #it
   ]
 )
