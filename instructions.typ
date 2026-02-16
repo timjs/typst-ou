@@ -28,21 +28,21 @@
 ]
 #let study-main-text(section) = [
   Bestudeer van #lookup-title-and-format(section) de tekst in het boek.
-  Het bijbehorende materiaal in de _Companion_ kunt u overslaan.
+  Het bijbehorende materiaal in de _Companion_ kunt je overslaan.
 ]
 
 #let skip-entire(section) = [
   Sla #lookup-title-and-format(section) over, dit is geen tentamenstof.
 ]
 #let skip-or-extra(section) = [
-  De #lookup-title-and-format(section) is geen tentamenstof maar kunt u lezen ter verdieping.
+  De #lookup-title-and-format(section) is geen tentamenstof maar kun je lezen ter verdieping.
 ]
 
 #let skip-from(section, till: none) = [
   Sla #lookup-title-and-format(section) over.
 ]
 #let skip-rest-or-extra() = [
-  De rest van deze paragraaf is geen tentamenstof, maar kunt u lezen ter verdieping.
+  De rest van deze paragraaf is geen tentamenstof, maar kun je lezen ter verdieping.
 ]
 
 #let under-construction() = components.accent()[
@@ -51,6 +51,11 @@
   Verwijzingen naar het tekstboek voegen wij de komende tijd stapsgewijs toe.
   Ook zullen wij de lesstof uitbreiden met meer opdrachten.
 ]
-#let more-follows() = [
+#let sections-follow() = [
   Verdere leeswijzer voor dit hoofdstuk volgt nog...
+]
+#let exercises-follow() = components.accent()[
+  De lesstof op deze pagina is compleet is zal niet meer veranderen.
+
+  Echter bevat deze nog geen opdrachten. Begin komende week zullen wij die toevoegen!
 ]
