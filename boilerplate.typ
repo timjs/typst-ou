@@ -1,14 +1,14 @@
 #let template(it) = context {
 
-  // TODO: move this somewhere else
+  /// TODO: move this somewhere else
   set heading(numbering: "1.1.1")
 
   if target() == "html" {
 
-    // TODO: lift all one level
-    // show heading.where(level: 1): html.h1
+    /// TODO: lift all one level (now done with short inline JS script)
+    /// show heading.where(level: 1): html.h1
 
-    // Wrap everything in OU styles
+    /// Wrap everything in OU styles
     show: (it) => html.html({
       let assets = "https://brightspace.ou.nl/shared/HTML-Template-Library/HTML-Templates-OU/_assets/"
       html.head({
@@ -23,7 +23,7 @@
         /// Below, the CSS code for OU block's.
         /// Contrary to the original, this  code is *parametrised* with an icon.
         /// The icon is a FontAwesome unicode char and is read from the `title` attribute.
-        /// (Better would be the `data-text` attribute, but Typst doesn't support that.)
+        /// FIXME: Better would be the `data-text` attribute, but Typst doesn't support that.
         html.style(
 ".bs-ou-component-custom {
   margin-bottom: 30px;
@@ -84,8 +84,9 @@
           )
         ) +
         /// This code moves each `hN` one up, to `h(N-1)`.
-        /// Typst generates headings starting from `h2`,
-        /// OU wants headings to start at `h1`.
+        /// Typst generates headings starting from `h2`, OU wants headings to start at `h1`.
+        /// We also add a `p` after a `h2` for some air.
+        /// Not sure if this is also OU policy...
         html.script(
 "document.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(el => {
   const currentLevel = parseInt(el.tagName[1]);
@@ -97,21 +98,32 @@
   if (newLevel === 1) {
     const hr = document.createElement('hr');
     newHeading.insertAdjacentElement('afterend', hr);
+  } else if (newLevel === 2) {
+    const p = document.createElement('p');
+    newHeading.insertAdjacentElement('afterend', p);
   }
 });"
         )
       )
     })
 
+    /// Workaround to add a paragraph at the bottom of a table.
+    /// This is what the OU styles expect.
+    show table: (it) => {
+      it
+      par("")
+    }
+
     /// Workaround to *not* include bytes of image but just refer to it
     show image: (it) => {
-      html.img(
+      html.elem("img", attrs: (
         // alt: if it.alt == none {""} else {it.alt},
-        // height: it.height,
-        // width: it.width,
-        src: it.source,
-      )
-      html.pre(it.source)
+        height: repr(it.height.length),
+        width: repr(it.width.length),
+        /// Look for figures one dir up,
+        /// TODO: this should be in the Rust script
+        src: ".." + it.source,
+      ))
     }
 
     /// Workaround for SVG math
