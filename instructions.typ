@@ -12,11 +12,12 @@
   ]
   [.]
 }
-#let study-from(section, till: none, next: false) = {
+#let study-from(section, till: none, till-end: none, next: false) = {
   [Bestudeer ]
   if next [vervolgens ]
   lookup-title-and-format(section)
   if till != none [ tot aan #lookup-title-and-format(till)]
+  if till-end != none [ tot aan het einde van #lookup-title-and-format(till-end)]
   [.]
 }
 
@@ -45,6 +46,24 @@
   De rest van deze paragraaf is geen tentamenstof, maar kun je lezen ter verdieping.
 ]
 
+#let check-yourself(section: none, except: ()) = {
+  [Controleer met behulp van de _Check your understanding_ aan het einde van ]
+  if section == none [deze paragraaf] else [#lookup-title-and-format(section)]
+  [ of je de lesstof hebt begrepen.]
+  if except.len() > 0 {
+    if except.len() <= 1 [
+      Vraag #except.at(0)
+    ] else [
+      Vragen #except.join(", ")
+    ]
+    [kun je overslaan, dit behoort niet tot de lesstof.]
+  }
+}
+
+#let make-exercise(number, page, book) = [
+  Maak Exercise #number op pagina #page uit #book.authors.
+]
+
 #let under-construction() = components.accent()[
   Deze cursussite is nog in ontwikkeling!
   Bij leereenheden die nog niet compleet zijn zul je deze waarschuwing terugvinden.
@@ -58,4 +77,10 @@
   De lesstof op deze pagina is compleet is zal niet meer veranderen.
 
   Echter bevat deze nog geen opdrachten. Begin komende week zullen wij die toevoegen!
+]
+
+#let fourth-edition() = [
+  Mocht je de 4e editie hebben van dit boek,
+  dan kun je met gerust hart het oude hoofdstuk lezen,
+  deze is op kleine verbeteringen hetzelfde als die in de 5e editie.
 ]

@@ -1,3 +1,8 @@
+/// Er zijn *component*en en *block*en.
+/// / Componenten: bevatten meta-informatie en instructies,
+///   ze zijn niet genummerd.
+/// / Blocken: zijn wel genummerd en kun je naar terug verwijzen.
+
 #import "/lib/basic/helpers.typ"
 
 /// Helper to annotate contents with an Html class (when exporting to Html)
@@ -44,7 +49,7 @@
   kind,
   ..args,
   inner[
-    #if supplement != none [#heading(depth: 3, numbering: numbering)[#supplement] #if caption != none [(#caption)]]
+    #if supplement != none [#heading(depth: 3, numbering: numbering)[#supplement#if caption != none [: #caption]]]
     #it
   ]
 )
@@ -63,7 +68,7 @@
 // )
 
 
-//// Basic components ////////////////////////////////////////////////////////////////////////////////
+//// Basic blocks //////////////////////////////////////////////////////////////////////////////////
 
 #let ou-block-white = ou-block.with("") //TODO: icon here?
 #let ou-block-white-accent = ou-block.with("example", inner: div-or-id-with-par.with(class: "example-wrapper"))
@@ -72,7 +77,7 @@
 #let ou-block-gray-accent = ou-block.with("accent")
 
 
-//// Custom components ///////////////////////////////////////////////////////////////////////////////
+//// Custom blocks /////////////////////////////////////////////////////////////////////////////////
 
 #let custom-block = ou-block.with("custom")
 #let custom-block-gray = ou-block.with("custom-gray")
@@ -118,6 +123,7 @@
 #let instruction(it) = ou-component("studyinstructions")[
   - #it
 ]
+// #let instruction(it) = custom-block(it)
 
 //// Meta components ///////////////////////////////////////////////////////////////////////////////
 
@@ -135,14 +141,21 @@
   </ul>
 </div>
 */
-#let goals(element: "leereenheid", it) = ou-component("learningobjectives")[ //, title: "Leerdoelen")[
-  Na het bestuderen van deze #element wordt verwacht dat u:
+#let checkmarks = ou-component.with("learningobjectives")
+#let concepts(it) = [
+  ==== Kernbegrippen
   #it
 ]
+#let goals(element: "leereenheid", it) = checkmarks[ //, title: "Leerdoelen")[
+  Na het bestuderen van deze #element kun je:
+  #it
+]
+
 
 #let materials = custom-block.with(icon: "")
 #let chapter(chapter, authors, it) = materials[ //("instruction")[ //, title: "Aanwijzingen")[
   Bij deze leereenheid hoort hoofdstuk~#chapter van het tekstboek van #authors.
+
   #it
 ]
 
@@ -156,6 +169,7 @@
   De totale studiebelasting van deze leereenheid bedraagt circa #hours uur.
   // De studielast van deze leereenheid is circa #hours uur.
 ]
+
 
 //// Helper components /////////////////////////////////////////////////////////////////////////////
 
@@ -190,9 +204,11 @@
   div-or-id(class: "accordion-item",
     div-or-id(class: "accordion-header collapser", button-or-none(class: "accordion-button collapsed")) +
     div-or-id(class: "accordion-collapse collapse",
-      div-or-id-with-par(class: "accordion-body")[
-        #it
-      ]
+      div-or-id-with-par(class: "accordion-body",
+        question(
+          it
+        )
+      )
     )
   )
 )
@@ -204,15 +220,16 @@
   <p>[[Voeg hier een casus in]]</p>
 </div>
 */
-#let exercise(caption: none, old: none, body, solution) = ou-block-gray(
+#let exercise(caption: none, old: none, hide: false, level, body, solution) = if hide [] else {ou-block-gray(
   supplement: "Opdracht",
-  caption: caption,// + if old != none [was #old],
+  caption: [#caption (#helpers.times(level, "*"))],// + if old != none [was #old],
   numbering: "1.1.1",
-  {
-    body
-    answer(solution)
-  }
-)
+)[
+  /// FIXME: make numbering a parameter or  like that
+  // #set enum(numbering: "(a)")
+  #question(body)
+  #answer(solution)
+]}
 
 /*
 <div class="bs-ou-component-accent">
@@ -251,13 +268,14 @@
 //   supplement: "Voorbeeld",
 //   title: title,
 // )
+
 /*
 <div class="bs-ou-component-coreconcept">
   <h2>Kernbegrip: [[Titel]]</h2>
   <p>[[Toelichting]]</p>
 </div>
 */
-#let concept-dont-use = ou-component.with("coreconcept", caption: [Studieconcept])
+#let concept-dont-use = ou-component.with("coreconcept") //, title: [Studieconcept])
 
 
 /*
@@ -266,4 +284,4 @@
   <p>[[Inhoud]]</p>
 </div>
 */
-#let skill-dont-use = ou-component.with("studyskill", caption: [Studievaardigheid])
+#let skill-dont-use = ou-component.with("studyskill") // caption: [Studievaardigheid])

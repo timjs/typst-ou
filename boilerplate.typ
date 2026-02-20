@@ -1,7 +1,8 @@
 #let template(it) = context {
 
-  /// TODO: move this somewhere else
+  /// TODO: move this somewhere else (now also in basic/parts.typ)
   set heading(numbering: "1.1.1")
+  show heading.where(level: 4): set heading(numbering: none)
 
   if target() == "html" {
 
@@ -69,7 +70,24 @@
   content: attr(title);
   color: #fff;
   text-align: center;
-}"
+}
+/*  Target all <ol> in the wrapper, even in .accordion-body
+    (otherwise they'll get numbered...)
+    FIXME: met Typst forcen, dan kan dit weg.
+*/
+.bs-ou-component-inline-question-wrap ol {
+  list-style-type: upper-alpha !important;
+}
+/*  Typst generates paragraphs in <li>s (as should be),
+    but OU CSS adds extra margin at the bottom of <p>.
+    However... the component `studyinstructions` uses <ul> and <li>
+    to attach `::before` a pointing hand icon.
+    So we match specifically one level deeper to remove the bottom margin.
+*/
+.bs-ou-component-studyinstructions ul ul p {
+  margin-bottom: 0;
+}
+"
         )
       })
       html.body(
@@ -116,10 +134,12 @@
 
     /// Workaround to *not* include bytes of image but just refer to it
     show image: (it) => {
+      let h = if it.height == none or it.height == auto {100%} else {it.height.length}
+      let w = if it.width == none or it.width == auto {100%} else {it.width.length}
       html.elem("img", attrs: (
         // alt: if it.alt == none {""} else {it.alt},
-        height: repr(it.height.length),
-        width: repr(it.width.length),
+        height: repr(h),
+        width: repr(w),
         /// Look for figures one dir up,
         /// TODO: this should be in the Rust script
         src: ".." + it.source,
@@ -135,7 +155,14 @@
       html.span(role: "math", html.frame(it))
     }
 
-    it
+    /// Not a workaround, but actual makeup.
+    /// TODO: add or not?
+    show raw: (it) => [
+      #if it.lang != none [#upper(it.lang.at(0))#lower(it.lang.slice(1))]
+      #it
+    ]
+
+   it
   } else {
     it
   }
