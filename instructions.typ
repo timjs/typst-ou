@@ -5,20 +5,17 @@
 #let study-entire(section, except: none) = {
   // [Lees van deze paragraaf alle subparagrafen]
   [Bestudeer #lookup-title-and-format(section)]
-  if type(except) == str [
-    behalve #lookup-title-and-format(except)
-  ] else if type(except) == array [
-    behalve subparagrafen #except.map(lookup-title).intersperse([, ]).join()
-  ]
+  if type(except) == str [ behalve #lookup-title-and-format(except)]
+     else if type(except) == array [ behalve subparagrafen #except.map(lookup-title).join([, ])]
   [.]
 }
 #let study-from(section, till: none, till-end: none, next: false) = {
   [Bestudeer ]
   if next [vervolgens ]
   lookup-title-and-format(section)
-  if till != none [ tot aan #lookup-title-and-format(till)]
-  if till-end != none [ tot aan het einde van #lookup-title-and-format(till-end)]
-  [.]
+  if till != none [ tot aan (dus zonder) #lookup-title-and-format(till) ]
+  if till-end != none [ tot aan het einde van #lookup-title-and-format(till-end) ]
+  [. ]
 }
 
 #let study-intro(book, section) = [
@@ -32,31 +29,36 @@
   Het bijbehorende materiaal in de _Companion_ kunt je overslaan.
 ]
 
-#let skip-entire(section) = [
-  Sla #lookup-title-and-format(section) over, dit is geen tentamenstof.
-]
-#let skip-or-extra(section) = [
-  De #lookup-title-and-format(section) is geen tentamenstof maar kun je lezen ter verdieping.
-]
+#let skip(section, till: none, extra: false) = {
+  [Sla #lookup-title-and-format(section) over]
+  if till != none [ tot aan #lookup-title-and-format(till)]
+  [, dit is geen tentamenstof ]
+  if extra [maar kun je lezen ter verdieping. ]
+}
+#let skip-rest(extra: false) = {
+  [Sla de rest van deze paragraaf over, dit is geen tentamenstof ]
+  if extra [maar kun je lezen ter verdieping. ]
+}
 
-#let skip-from(section, till: none) = [
-  Sla #lookup-title-and-format(section) over.
-]
-#let skip-rest-or-extra() = [
-  De rest van deze paragraaf is geen tentamenstof, maar kun je lezen ter verdieping.
-]
+#let check-yourself(next: false, section: none, except: (), only: ()) = {
+  if next [Doe daarna hetzelfde met ]
+     else [Controleer met behulp van ]
+  [de _Check your understanding_ aan het einde van ]
+  if section == none [deze paragraaf ] else [#lookup-title-and-format(section) ]
+  if next [. ]
+     else [of je de lesstof hebt begrepen. ]
 
-#let check-yourself(section: none, except: ()) = {
-  [Controleer met behulp van de _Check your understanding_ aan het einde van ]
-  if section == none [deze paragraaf] else [#lookup-title-and-format(section)]
-  [ of je de lesstof hebt begrepen.]
   if except.len() > 0 {
-    if except.len() <= 1 [
-      Vraag #except.at(0)
-    ] else [
-      Vragen #except.join(", ")
-    ]
-    [kun je overslaan, dit behoort niet tot de lesstof.]
+    if except.len() <= 1 [Vraag #except.at(0) ]
+       else [Vragen #except.join(", ") ]
+    [kun je overslaan, dit behoort niet tot de lesstof. ]
+  }
+
+  if only.len() > 0 {
+    [Hiervan ]
+    if only.len() <= 1 [is alleen vraag #only ]
+       else [zijn alleen vragen #only.map((it) => [#it]).join(", ", last: " en ") ]
+    [relevant. ]
   }
 }
 
