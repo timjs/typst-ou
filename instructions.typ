@@ -44,9 +44,9 @@
   if next [Doe daarna hetzelfde met ]
      else [Controleer met behulp van ]
   [de _Check your understanding_ aan het einde van ]
-  if section == none [deze paragraaf ] else [#lookup-title-and-format(section) ]
+  if section == none [deze paragraaf ] else [#lookup-title-and-format(section)]
   if next [. ]
-     else [of je de lesstof hebt begrepen. ]
+     else [ of je de lesstof hebt begrepen. ]
 
   if except.len() > 0 {
     if except.len() <= 1 [Vraag #except.at(0) ]
