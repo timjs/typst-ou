@@ -1,0 +1,1 @@
+#let calculate-study-load(pages, stars, student-factor: 2, read-unit: 2.5, work-unit: 15) = (pages * read-unit + stars * work-unit) / 60 * student-factor
