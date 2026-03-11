@@ -2,11 +2,14 @@
 #import "/lib/book-toc.typ": lookup-title, lookup-title-and-format
 #import "/lib/ou/components.typ"
 
+//FIXME: shadows `content` type, but it doesn't have a constructor...
+#let content(it) = [#it]
+
 #let study-entire(section, except: none) = {
   // [Lees van deze paragraaf alle subparagrafen]
   [Bestudeer #lookup-title-and-format(section)]
   if type(except) == str [ behalve #lookup-title-and-format(except)]
-     else if type(except) == array [ behalve subparagrafen #except.map(lookup-title).join([, ])]
+     else if type(except) == array [ behalve #except.map(lookup-title-and-format).join([, ], last: [ en ])]
   [.]
 }
 #let study-from(section, till: none, till-end: none, next: false) = {
@@ -32,8 +35,9 @@
 #let skip(section, till: none, extra: false) = {
   [Sla #lookup-title-and-format(section) over]
   if till != none [ tot aan #lookup-title-and-format(till)]
-  [, dit is geen tentamenstof ]
-  if extra [maar kun je lezen ter verdieping. ]
+  [, dit is geen tentamenstof]
+  if extra [ maar kun je lezen ter verdieping]
+  [.]
 }
 #let skip-rest(extra: false) = {
   [Sla de rest van deze paragraaf over, dit is geen tentamenstof ]
@@ -50,14 +54,14 @@
 
   if except.len() > 0 {
     if except.len() <= 1 [Vraag #except.at(0) ]
-       else [Vragen #except.join(", ") ]
+       else [Vragen #except.map(content).join([, ], last: [ en ]) ]
     [kun je overslaan, dit behoort niet tot de lesstof. ]
   }
 
   if only.len() > 0 {
     [Hiervan ]
     if only.len() <= 1 [is alleen vraag #only ]
-       else [zijn alleen vragen #only.map((it) => [#it]).join(", ", last: " en ") ]
+       else [zijn alleen vragen #only.map(content).join([, ], last: [ en ]) ]
     [relevant. ]
   }
 }
