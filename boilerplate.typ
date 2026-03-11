@@ -1,3 +1,11 @@
+#let fix-path(path) = {
+  if path.starts-with("/") {
+    ".." + path
+  } else {
+    path
+  }
+}
+
 #let template(it) = context {
 
   /// TODO: move this somewhere else (now also in basic/parts.typ)
@@ -134,16 +142,22 @@
 
     /// Workaround to *not* include bytes of image but just refer to it
     show image: (it) => {
-      let h = if it.height == none or it.height == auto {100%} else {it.height.length}
       let w = if it.width == none or it.width == auto {100%} else {it.width.length}
+      let h = if it.height == none or it.height == auto {100%} else {it.height.length}
+      /// NOTE: we use the untyped `html.elem` here to be able to put non-integers in `width` and `height`
       html.elem("img", attrs: (
         // alt: if it.alt == none {""} else {it.alt},
-        height: repr(h),
         width: repr(w),
+        height: repr(h),
         /// Look for figures one dir up,
         /// TODO: this should be in the Rust script
-        src: ".." + it.source,
+        src: fix-path(it.source),
+        // src: ".." + it.source,
       ))
+    }
+
+    show link: (it) => {
+      html.a(href: fix-path(it.dest), it.body)
     }
 
     /// Workaround for SVG math
@@ -157,6 +171,7 @@
 
     /// Not a workaround, but actual makeup.
     /// TODO: add or not?
+    /// FIXME: `c++` rendered as `c` with ++ on next line
     show raw: (it) => [
       #if it.lang != none [#upper(it.lang.at(0))#lower(it.lang.slice(1))]
       #it
