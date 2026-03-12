@@ -1,3 +1,5 @@
+#import "/lib/basic/setups.typ": syntaxes
+
 #let fix-path(path) = {
   if path.starts-with("/") {
     ".." + path
@@ -7,6 +9,7 @@
 }
 
 #let template(it) = context {
+  show: syntaxes
 
   /// TODO: move this somewhere else (now also in basic/parts.typ)
   set heading(numbering: "1.1.1")
