@@ -1,9 +1,17 @@
 //TODO: factor out `lookup-title-and-format`
-#import "/lib/book-toc.typ": lookup-title, lookup-title-and-format
+#import "/lib/book-toc.typ": lookup-title, lookup-title-and-format, book,
 #import "/lib/ou/components.typ"
 
 //FIXME: shadows `content` type, but it doesn't have a constructor...
 #let content(it) = [#it]
+
+#let refer(kind, number, page) = {
+  [#kind~#number op pagina~#page uit #book.authors]
+}
+
+#let see-also(section) = {
+  [(zie ook #lookup-title-and-format(section))]
+}
 
 #let study-entire(section, except: none) = {
   // [Lees van deze paragraaf alle subparagrafen]
