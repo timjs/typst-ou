@@ -98,6 +98,10 @@
 .bs-ou-component-studyinstructions ul ul p {
   margin-bottom: 0;
 }
+/*  Remove weird pink colouring of <code> tags...  */
+code {
+  color: inherit !important;
+}
 "
         )
       })
