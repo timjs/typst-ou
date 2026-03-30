@@ -20,12 +20,12 @@
      else if type(except) == array [ behalve #except.map(lookup-title-and-format).join([, ], last: [ en ])]
   [.]
 }
-#let study-from(section, till: none, till-end: none, next: false) = {
+#let study-from(section, till-excluding: none, till-including: none, next: false) = {
   [Bestudeer ]
   if next [vervolgens ]
   lookup-title-and-format(section)
-  if till != none [ tot aan (dus zonder) #lookup-title-and-format(till) ]
-  if till-end != none [ tot aan het einde van #lookup-title-and-format(till-end) ]
+  if till-excluding != none [ tot aan (dus zonder) #lookup-title-and-format(till-excluding) ]
+  if till-including != none [ tot aan het einde van #lookup-title-and-format(till-including) ]
   [. ]
 }
 
@@ -40,15 +40,16 @@
   Het bijbehorende materiaal in de _Companion_ kunt je overslaan.
 ]
 
-#let skip(section, till: none, extra: false) = {
+#let skip(section, till: none, repetition: false, extra: false) = {
   [Sla #lookup-title-and-format(section) over]
   if till != none [ tot aan #lookup-title-and-format(till)]
-  [, dit is geen tentamenstof]
+  if repetition [, dit is herhaling maar kun je lezen als opfrisser]
+  else [, dit is geen tentamenstof]
   if extra [ maar kun je lezen ter verdieping]
   [.]
 }
-#let skip-rest(extra: false) = {
-  [Sla de rest van deze paragraaf over, dit is geen tentamenstof ]
+#let skip-rest(kind: "paragraaf", extra: false) = {
+  [Sla de rest van deze #kind over, dit is geen tentamenstof ]
   if extra [maar kun je lezen ter verdieping. ]
 }
 
