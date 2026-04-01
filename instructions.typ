@@ -103,7 +103,7 @@
 #let exercises-follow() = components.accent()[
   De lesstof op deze pagina is compleet is zal niet meer veranderen.
 
-  Echter bevat deze nog geen opdrachten. Begin komende week zullen wij die toevoegen!
+  Echter bevat deze nog geen opdrachten. Die zullen we deze week toevoegen!
 ]
 
 #let fourth-edition() = [
