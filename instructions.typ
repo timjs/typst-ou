@@ -13,21 +13,18 @@
   [(zie ook #lookup-title-and-format(section))]
 }
 
-#let study-entire(section, emphasize: false, except: none) = {
-  // [Lees van deze paragraaf alle subparagrafen]
-  [ Bestudeer]
-  if emphasize [ wél]
-  [ #lookup-title-and-format(section)]
-  if type(except) == str [ behalve #lookup-title-and-format(except)]
-    else if type(except) == array [ behalve #except.map(lookup-title-and-format).join([, ], last: [ en ])]
-  [.]
-}
-#let study-from(section, till-excluding: none, till-including: none, next: false) = {
+#let study(section, next: false, emphasize: false, till-excluding: none, till-including: none, except: none) = {
   [ Bestudeer]
   if next [ vervolgens]
+  if emphasize [ wél]
   [ #lookup-title-and-format(section)]
   if till-excluding != none [ tot aan (dus zonder) #lookup-title-and-format(till-excluding)]
   if till-including != none [ tot aan het einde van #lookup-title-and-format(till-including)]
+  if except != none {
+    [ behalve]
+    if type(except) == str [ behalve #lookup-title-and-format(except)]
+      else if type(except) == array [ behalve #except.map(lookup-title-and-format).join([, ], last: [ en ])]
+  }
   [.]
 }
 
@@ -63,7 +60,8 @@
 }
 #let skip-rest(kind: "paragraaf", extra: false) = {
   [ Sla de rest van deze #kind over, dit is geen tentamenstof]
-  if extra [ maar kun je lezen ter verdieping.]
+  if extra [ maar kun je lezen ter verdieping]
+  [.]
 }
 
 #let check-yourself(next: false, section: none, except: (), only: ()) = {
