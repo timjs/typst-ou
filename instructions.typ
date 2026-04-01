@@ -1,4 +1,5 @@
 //TODO: factor out `lookup-title-and-format`
+#import "/lib/basic/helpers.typ": match
 #import "/lib/book-toc.typ": lookup-title, lookup-title-and-format, book,
 #import "/lib/ou/components.typ"
 
@@ -22,8 +23,8 @@
   if till-including != none [ tot aan het einde van #lookup-title-and-format(till-including)]
   if except != none {
     [ behalve]
-    if type(except) == str [ behalve #lookup-title-and-format(except)]
-      else if type(except) == array [ behalve #except.map(lookup-title-and-format).join([, ], last: [ en ])]
+    if type(except) == str   [ #lookup-title-and-format(except)]
+    if type(except) == array [ #except.map(lookup-title-and-format).join([, ], last: [ en ])]
   }
   [.]
 }
