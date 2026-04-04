@@ -88,6 +88,10 @@
   }
 }
 
+#let exercises-similar-to-checks() = [
+  Enkele opgaven hieronder behandelen de gevraagde begrippen in meer detail.
+]
+
 #let make-exercise(number, page, book) = [
   Maak Exercise #number op pagina #page uit #book.authors.
 ]
